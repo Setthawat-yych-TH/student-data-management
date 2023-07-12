@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.util.List;
 
+
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/student")
 @RestController
 public class StudentController {
@@ -33,18 +35,23 @@ public class StudentController {
     }
 
 
+    @GetMapping("/showStudentByStudentNo")
+    public Student showStudentByStudentNo(@RequestParam int studentNo) {
+        return studentService.showStudentByStudentNo(studentNo);
+    }
+
     @GetMapping("/showStudentById")
-    public StudentResponse showStudentById(@RequestParam int studentId) {
+    public Student showStudentById(@RequestParam int studentId) {
         return studentService.showStudentById(studentId);
     }
 
     @GetMapping("/showStudentAll")
-    public List<StudentResponse> showStudentAll(){
+    public List<Student> showStudentAll(){
         return studentService.showStudentAll();
     }
 
-    @PostMapping("/createStudent")
-    public Student createStudent(@RequestBody StudentRequest studentRequest,@RequestParam int roomId){
+    @PostMapping("/createStudent/{roomId}")
+    public Student createStudent(@RequestBody StudentRequest studentRequest,@PathVariable int roomId){
         return studentService.createStudent(studentRequest, roomId);
     }
 

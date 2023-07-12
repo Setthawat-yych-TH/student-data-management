@@ -1,6 +1,7 @@
 package com.assignment.studentdatamanagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class Student {
     @Column(name = "student_id")
     private Integer studentId;
 
-    @Column(name = "student_Number")
+    @Column(name = "student_number")
     private Integer studentNo;
 
     @Column(name = "email")
@@ -61,7 +62,10 @@ public class Student {
     @Column(name = "status")
     private StatusType status;
 
-
+    @OneToOne
+    @JsonManagedReference
+    @JoinColumn(name = "image_id")
+    private ImageData imageData;
 
     public Student(String email,String firstName, String lastName,String userLogin, String password, String school, Room room, LocalDate startedDate, LocalDate resignedDate, StatusType status) {
         this.email = email;

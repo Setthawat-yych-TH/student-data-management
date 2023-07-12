@@ -34,4 +34,10 @@ public class StudentResponse {
 
     private Student.StatusType status;
 
+    private String imageName;
+
+    private String imageType;
+
+    private byte[] imageValue;
+
 }

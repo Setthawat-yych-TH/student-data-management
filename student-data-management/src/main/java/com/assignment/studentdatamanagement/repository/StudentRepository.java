@@ -8,9 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
+
+    public Student findByStudentNo (Integer studentNo);
 
     public List<Student> findByFirstNameContainingIgnoreCase (String firstName);
 

@@ -6,9 +6,13 @@ import com.assignment.studentdatamanagement.dto.StudentRequest;
 import com.assignment.studentdatamanagement.dto.StudentResponse;
 import com.assignment.studentdatamanagement.repository.RoomRepository;
 import com.assignment.studentdatamanagement.repository.StudentRepository;
+import com.assignment.studentdatamanagement.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -17,13 +21,15 @@ import java.util.List;
 
 @Service
 public class StudentService {
-
+    MultipartFile defaultImage ;
     @Autowired
     StudentRepository studentRepository;
 
     @Autowired
     RoomRepository roomRepository;
 
+    @Autowired
+    ImageDataService imageDataService;
 
     public List<Student> searchStudent(String type, String value) {
         try {
@@ -56,23 +62,27 @@ public class StudentService {
         return studentRepository.findByFirstNameContainingIgnoreCase(firstName);
     }
 
-
-    public StudentResponse showStudentById(int studentId) {
-
-        Student student = studentRepository.findById(studentId).orElseThrow();
-
-        return transferStudentToStudentResponse(student);
+    public Student showStudentByStudentNo(int studentNo){
+        return studentRepository.findByStudentNo(studentNo);
     }
 
-    public List<StudentResponse> showStudentAll(){
+
+    public Student showStudentById(int studentId) {
+
+
+
+        return studentRepository.findById(studentId).orElseThrow();
+    }
+
+    public List<Student> showStudentAll(){
         List <Student> studentList = studentRepository.findAll();
         List <StudentResponse> studentResponseList = new ArrayList<>();
 
-        for (Student student : studentList) {
-            studentResponseList.add(transferStudentToStudentResponse(student));
-        }
+//        for (Student student : studentList) {
+//            studentResponseList.add(transferStudentToStudentResponse(student));
+//        }
 
-        return studentResponseList;
+        return studentList;
     }
 
 
@@ -95,10 +105,17 @@ public class StudentService {
                 studentRequest.getStartedDate(),
                 studentRequest.getResignedDate(),
                 checkStatusIsActive(studentRequest));
+
+
+
+
         studentRepository.save(student);
 
         student.setStudentNo(student.changeStudentIdFormat());
+        //imageDataService.uploadImage(,student.getStudentId());
+
         studentRepository.save(student);
+
 
         return student;
     }
@@ -133,6 +150,8 @@ public class StudentService {
     }
 
 
+
+
     private Student.StatusType checkStatusIsActive(StudentRequest studentRequest) {
         if (studentRequest.getResignedDate() != null)
         {
@@ -160,6 +179,9 @@ public class StudentService {
             studentResponse.setStartedDate(student.getStartedDate());
             studentResponse.setResignedDate(student.getResignedDate());
             studentResponse.setStatus(student.getStatus());
+            studentResponse.setImageName(student.getImageData().getImageName());
+            studentResponse.setImageType(student.getImageData().getImageType());
+            studentResponse.setImageValue(student.getImageData().getImageValue());
 
             return studentResponse;
         }

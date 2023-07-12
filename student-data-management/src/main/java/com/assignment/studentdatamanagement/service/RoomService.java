@@ -28,7 +28,7 @@ public class RoomService {
         Grade grade = gradeRepository.findById(gradeId).orElseThrow();
 
         if(!roomRepository.findByRoomNumberAndGrade(roomRequest.getRoomNumber(),grade).isEmpty()) {
-            throw new RuntimeException();
+            throw new RuntimeException("Duplicate roomNumber and grade");
         }
         Room room = new Room(roomRequest.getRoomNumber(),grade);
         roomRepository.save(room);
@@ -41,7 +41,7 @@ public class RoomService {
             roomRepository.deleteById(roomId);
             return roomId + " : Deleted success";
         }
-        throw new RuntimeException();
+        throw new RuntimeException("roomId don't exist");
 
     }
 
